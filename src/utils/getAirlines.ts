@@ -6,12 +6,12 @@ export const getAirLines = () => {
   const airlines: { uid: string; caption: string; airlineCode: string }[] = []
 
   for (let i of data.result.flights) {
-    const { airline } = i.flight.legs[1].segments[0]
+    const { carrier } = i.flight
 
-    const isHave = airlines.find((a) => a.caption.includes(airline.caption))
+    const isHave = airlines.find((a) => a.caption.includes(carrier.caption))
 
     if (!isHave) {
-      airlines.push(airline)
+      airlines.push(carrier)
     }
   }
   return airlines

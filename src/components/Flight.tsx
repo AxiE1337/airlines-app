@@ -1,4 +1,4 @@
-import { FC } from 'react'
+import { FC, memo } from 'react'
 import { IFlightInfo } from '../types/types'
 
 const Flight: FC<IFlightProps> = ({ flightInfo }) => {
@@ -22,7 +22,8 @@ const Flight: FC<IFlightProps> = ({ flightInfo }) => {
           <h1 className="font-semibold">{`${flightTo.segments[0]?.departureCity.caption}, ${flightTo.segments[0]?.departureAirport.caption}`}</h1>
           <p>-</p>
           <h1 className="font-semibold">{`${
-            flightTo.segments[flightTo.segments.length - 1]?.arrivalCity.caption
+            flightTo.segments[flightTo.segments.length - 1]?.arrivalCity
+              ?.caption
           }, ${
             flightTo.segments[flightTo.segments.length - 1]?.arrivalAirport
               .caption
@@ -43,21 +44,21 @@ const Flight: FC<IFlightProps> = ({ flightInfo }) => {
           </h2>
         </section>
         <h2 className="my-4">
-          Рейс выполняет: {flightTo.segments[0]?.airline.caption}
+          Рейс выполняет: {flightTo.segments[0]?.airline?.caption}
         </h2>
       </div>
       <span className="w-full bg-blue-600 h-1 my-2"></span>
       {/* flight back */}
       <div className="flex flex-col content-start w-full px-4">
         <section className="flex gap-2 my-4">
-          <h1 className="font-semibold">{`${flightBack.segments[0]?.departureCity.caption}, ${flightBack.segments[0]?.departureAirport.caption}`}</h1>
+          <h1 className="font-semibold">{`${flightBack.segments[0]?.departureCity?.caption}, ${flightBack.segments[0]?.departureAirport?.caption}`}</h1>
           <p>-</p>
           <h1 className="font-semibold">{`${
             flightBack.segments[flightBack.segments.length - 1]?.arrivalCity
-              .caption
+              ?.caption
           }, ${
             flightBack.segments[flightBack.segments.length - 1]?.arrivalAirport
-              .caption
+              ?.caption
           }`}</h1>
         </section>
         <section className="flex flex-col my-4">
@@ -75,7 +76,7 @@ const Flight: FC<IFlightProps> = ({ flightInfo }) => {
           </h2>
         </section>
         <h2 className="my-4">
-          Рейс выполняет: {flightBack.segments[0]?.airline.caption}
+          Рейс выполняет: {flightBack.segments[0]?.airline?.caption}
         </h2>
       </div>
       <button className="btn btn-neutral my-1 w-full">Выбрать</button>
@@ -83,7 +84,7 @@ const Flight: FC<IFlightProps> = ({ flightInfo }) => {
   )
 }
 
-export default Flight
+export default memo(Flight)
 
 interface IFlightProps {
   flightInfo: IFlightInfo

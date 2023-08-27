@@ -1,10 +1,14 @@
-import { FC } from 'react'
+import { FC, memo, useMemo, useState } from 'react'
 import { getAirLines } from '../utils/getAirlines'
+import { SortType } from '../utils/useFilter'
 
-const Sort: FC<ISortProps> = ({}) => {
-  const handleSort = (value: string) => {
-    console.log(value)
-  }
+const Sort: FC<ISortProps> = ({ handleSort }) => {
+  const [airlines, setAirlines] = useState<
+    { uid: string; caption: string; airlineCode: string }[]
+  >([])
+  useMemo(() => {
+    setAirlines(getAirLines())
+  }, [])
 
   return (
     <div className="flex flex-col w-[400px] min-h-screen p-2">
@@ -16,6 +20,7 @@ const Sort: FC<ISortProps> = ({}) => {
             name="sort"
             type="radio"
             id="byAscendingPrice"
+            onClick={() => handleSort('byAscendingPrice')}
           />
           <label htmlFor="byAscendingPrice">По возростанию цены</label>
         </span>
@@ -25,6 +30,7 @@ const Sort: FC<ISortProps> = ({}) => {
             name="sort"
             type="radio"
             id="byDescendingPrice"
+            onClick={() => handleSort('byDescendingPrice')}
           />
           <label htmlFor="byDescendingPrice">По Убыванию цены</label>
         </span>
@@ -34,6 +40,7 @@ const Sort: FC<ISortProps> = ({}) => {
             name="sort"
             type="radio"
             id="byTimeInFlight"
+            onClick={() => handleSort('byTimeInFlight')}
           />
           <label htmlFor="byTimeInFlight">По времени в пути</label>
         </span>
@@ -41,12 +48,12 @@ const Sort: FC<ISortProps> = ({}) => {
       <section className="flex flex-col gap-2 p-4">
         <h1 className="font-medium">Фильтровать</h1>
         <span className="flex gap-1">
-          <input type="checkbox" name="" id="" />
-          <label htmlFor="">1 пересадка</label>
+          <input type="checkbox" id="1stopover" />
+          <label htmlFor="1stopover">1 пересадка</label>
         </span>
         <span className="flex gap-1">
-          <input type="checkbox" name="" id="" />
-          <label htmlFor="">без пересадок</label>
+          <input type="checkbox" id="nostopover" />
+          <label htmlFor="nostopover">без пересадок</label>
         </span>
       </section>
       <section className="flex flex-col gap-2 p-4">
@@ -72,9 +79,9 @@ const Sort: FC<ISortProps> = ({}) => {
       </section>
       <section className="flex flex-col gap-2 p-4">
         <h1 className="font-medium">Авиа компании</h1>
-        {getAirLines().map((airline, index) => (
+        {airlines.map((airline, index) => (
           <span key={index} className="flex gap-2 items-center">
-            <input type="checkbox" name={airline.uid} id={airline.uid} />
+            <input type="checkbox" id={airline.uid} />
             <label className="select-none" htmlFor={airline.uid}>
               {airline.caption}
             </label>
@@ -85,6 +92,8 @@ const Sort: FC<ISortProps> = ({}) => {
   )
 }
 
-export default Sort
+export default memo(Sort)
 
-interface ISortProps {}
+interface ISortProps {
+  handleSort: (value: SortType) => void
+}
