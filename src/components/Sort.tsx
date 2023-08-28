@@ -1,11 +1,12 @@
 import { FC, memo, useMemo, useState } from 'react'
 import { getAirLines } from '../utils/getAirlines'
-import { SortType } from '../utils/useFilter'
+import { IFilters, SortType } from '../utils/useFilter'
 
-const Sort: FC<ISortProps> = ({ handleSort }) => {
+const Sort: FC<ISortProps> = ({ handleSort, setFilters }) => {
   const [airlines, setAirlines] = useState<
     { uid: string; caption: string; airlineCode: string }[]
   >([])
+
   useMemo(() => {
     setAirlines(getAirLines())
   }, [])
@@ -16,21 +17,19 @@ const Sort: FC<ISortProps> = ({ handleSort }) => {
         <h1 className="font-medium">Сортировать</h1>
         <span className="flex gap-1">
           <input
-            value="byAscendingPrice"
             name="sort"
             type="radio"
             id="byAscendingPrice"
-            onClick={() => handleSort('byAscendingPrice')}
+            onChange={() => handleSort('byAscendingPrice')}
           />
           <label htmlFor="byAscendingPrice">По возростанию цены</label>
         </span>
         <span className="flex gap-1">
           <input
-            value="byDescendingPrice"
             name="sort"
             type="radio"
             id="byDescendingPrice"
-            onClick={() => handleSort('byDescendingPrice')}
+            onChange={() => handleSort('byDescendingPrice')}
           />
           <label htmlFor="byDescendingPrice">По Убыванию цены</label>
         </span>
@@ -40,7 +39,7 @@ const Sort: FC<ISortProps> = ({ handleSort }) => {
             name="sort"
             type="radio"
             id="byTimeInFlight"
-            onClick={() => handleSort('byTimeInFlight')}
+            onChange={() => handleSort('byTimeInFlight')}
           />
           <label htmlFor="byTimeInFlight">По времени в пути</label>
         </span>
@@ -48,12 +47,30 @@ const Sort: FC<ISortProps> = ({ handleSort }) => {
       <section className="flex flex-col gap-2 p-4">
         <h1 className="font-medium">Фильтровать</h1>
         <span className="flex gap-1">
-          <input type="checkbox" id="1stopover" />
-          <label htmlFor="1stopover">1 пересадка</label>
+          <input
+            type="radio"
+            id="1stopover"
+            name="filter"
+            onChange={() => {
+              setFilters((prev) => ({ ...prev, filter: 'onestopover' }))
+            }}
+          />
+          <label className="select-none" htmlFor="1stopover">
+            1 пересадка
+          </label>
         </span>
         <span className="flex gap-1">
-          <input type="checkbox" id="nostopover" />
-          <label htmlFor="nostopover">без пересадок</label>
+          <input
+            type="radio"
+            id="nostopover"
+            name="filter"
+            onChange={() => {
+              setFilters((prev) => ({ ...prev, filter: 'nostopover' }))
+            }}
+          />
+          <label className="select-none" htmlFor="nostopover">
+            без пересадок
+          </label>
         </span>
       </section>
       <section className="flex flex-col gap-2 p-4">
@@ -96,4 +113,5 @@ export default memo(Sort)
 
 interface ISortProps {
   handleSort: (value: SortType) => void
+  setFilters: (value: React.SetStateAction<IFilters>) => void
 }
