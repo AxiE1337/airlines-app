@@ -13,11 +13,34 @@ export const useFilter = (data: IFlightsInfo) => {
     airlines: [],
   })
 
-  const handleSort = (value: SortType) => {
+  const handleFilter = () => {
+    const { filter, price, airlines, sort } = filters
+
+    let filtered = data.result.flights.filter((f) => {
+      const oneStopover =
+        filter === 'onestopover' ? f.flight.legs[0].segments.length === 2 : f
+      const noStopover =
+        filter === 'nostopover' ? f.flight.legs[0].segments.length === 1 : f
+
+      const priceFrom = Number(f.flight.price.total.amount) > Number(price.from)
+      const priceTo = Number(f.flight.price.total.amount) < Number(price.to)
+
+      return oneStopover && noStopover && priceFrom && priceTo
+    })
+    const filteredAirlines = [] as IFlightInfo[]
+    if (airlines.length > 0) {
+      for (let i of airlines) {
+        filteredAirlines.push(
+          ...[...filtered.filter((a) => a.flight.carrier.uid === i)]
+        )
+      }
+      filtered = filteredAirlines
+    }
+
     let sorted = [] as IFlightInfo[]
-    switch (value) {
+    switch (sort) {
       case 'byAscendingPrice':
-        sorted = flights.result.flights.sort((a, b) => {
+        sorted = filtered.sort((a, b) => {
           return (
             Number(a.flight.price.total.amount) -
             Number(b.flight.price.total.amount)
@@ -25,7 +48,7 @@ export const useFilter = (data: IFlightsInfo) => {
         })
         break
       case 'byDescendingPrice':
-        sorted = flights.result.flights.sort((a, b) => {
+        sorted = filtered.sort((a, b) => {
           return (
             Number(b.flight.price.total.amount) -
             Number(a.flight.price.total.amount)
@@ -33,25 +56,12 @@ export const useFilter = (data: IFlightsInfo) => {
         })
         break
       case 'byTimeInFlight':
-        sorted = flights.result.flights.sort((a, b) => {
+        sorted = filtered.sort((a, b) => {
           return a.flight.legs[0].duration - b.flight.legs[0].duration
         })
         break
     }
-    setFlights({ result: { flights: sorted } })
-  }
-
-  const handleFilter = () => {
-    const { filter } = filters
-
-    const filtered = data.result.flights.filter((f) => {
-      const oneStopover =
-        filter === 'onestopover' ? f.flight.legs[0].segments.length === 2 : f
-      const noStopover =
-        filter === 'nostopover' ? f.flight.legs[0].segments.length === 1 : f
-
-      return oneStopover && noStopover
-    })
+    filtered = sorted
 
     setFlights({ result: { flights: filtered } })
   }
@@ -60,7 +70,7 @@ export const useFilter = (data: IFlightsInfo) => {
     handleFilter()
   }, [filters])
 
-  return { flights, handleSort, filters, setFilters }
+  return { flights, filters, setFilters }
 }
 
 export type SortType =
@@ -70,12 +80,14 @@ export type SortType =
 
 export type FilterType = 'onestopover' | 'nostopover' | ''
 
+export interface IFilterByPrice {
+  from: number
+  to: number
+}
+
 export interface IFilters {
   sort: SortType
   filter: FilterType
-  price: {
-    from: number
-    to: number
-  }
+  price: IFilterByPrice
   airlines: string[]
 }

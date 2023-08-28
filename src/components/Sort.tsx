@@ -1,11 +1,24 @@
-import { FC, memo, useMemo, useState } from 'react'
+import { FC, memo, useEffect, useMemo, useState } from 'react'
 import { getAirLines } from '../utils/getAirlines'
-import { IFilters, SortType } from '../utils/useFilter'
+import { IFilterByPrice, IFilters } from '../utils/useFilter'
+import { useDebounceState } from 'useful-custom-react-hooks'
 
-const Sort: FC<ISortProps> = ({ handleSort, setFilters }) => {
+const Sort: FC<ISortProps> = ({ setFilters }) => {
   const [airlines, setAirlines] = useState<
     { uid: string; caption: string; airlineCode: string }[]
   >([])
+  const [airlinesFilter, setAirlinesFilter] = useState<string[]>([])
+  const [price, setPrice] = useDebounceState<IFilterByPrice>(
+    {
+      from: 0,
+      to: 1000000,
+    },
+    1000
+  )
+
+  useEffect(() => {
+    setFilters((prev) => ({ ...prev, price: price, airlines: airlinesFilter }))
+  }, [price, airlinesFilter])
 
   useMemo(() => {
     setAirlines(getAirLines())
@@ -20,7 +33,9 @@ const Sort: FC<ISortProps> = ({ handleSort, setFilters }) => {
             name="sort"
             type="radio"
             id="byAscendingPrice"
-            onChange={() => handleSort('byAscendingPrice')}
+            onChange={() =>
+              setFilters((prev) => ({ ...prev, sort: 'byAscendingPrice' }))
+            }
           />
           <label htmlFor="byAscendingPrice">По возростанию цены</label>
         </span>
@@ -29,7 +44,9 @@ const Sort: FC<ISortProps> = ({ handleSort, setFilters }) => {
             name="sort"
             type="radio"
             id="byDescendingPrice"
-            onChange={() => handleSort('byDescendingPrice')}
+            onChange={() =>
+              setFilters((prev) => ({ ...prev, sort: 'byDescendingPrice' }))
+            }
           />
           <label htmlFor="byDescendingPrice">По Убыванию цены</label>
         </span>
@@ -39,7 +56,9 @@ const Sort: FC<ISortProps> = ({ handleSort, setFilters }) => {
             name="sort"
             type="radio"
             id="byTimeInFlight"
-            onChange={() => handleSort('byTimeInFlight')}
+            onChange={() =>
+              setFilters((prev) => ({ ...prev, sort: 'byTimeInFlight' }))
+            }
           />
           <label htmlFor="byTimeInFlight">По времени в пути</label>
         </span>
@@ -79,8 +98,12 @@ const Sort: FC<ISortProps> = ({ handleSort, setFilters }) => {
           <label htmlFor="inputPriceFrom">От</label>
           <input
             className="input input-bordered"
-            type="text"
+            type="number"
+            min={0}
             id="inputPriceFrom"
+            onChange={(e) => {
+              setPrice({ ...price, from: Number(e.target.value) })
+            }}
             defaultValue={0}
           />
         </span>
@@ -88,8 +111,12 @@ const Sort: FC<ISortProps> = ({ handleSort, setFilters }) => {
           <label htmlFor="inputPriceTo">До</label>
           <input
             className="input input-bordered"
-            type="text"
+            type="number"
+            min={0}
             id="inputPriceTo"
+            onChange={(e) => {
+              setPrice({ ...price, to: Number(e.target.value) })
+            }}
             defaultValue={1000000}
           />
         </span>
@@ -98,7 +125,20 @@ const Sort: FC<ISortProps> = ({ handleSort, setFilters }) => {
         <h1 className="font-medium">Авиа компании</h1>
         {airlines.map((airline, index) => (
           <span key={index} className="flex gap-2 items-center">
-            <input type="checkbox" id={airline.uid} />
+            <input
+              type="checkbox"
+              id={airline.uid}
+              onChange={(e) => {
+                const { checked } = e.target
+                if (checked) {
+                  setAirlinesFilter((prev) => [...prev, airline.uid])
+                } else {
+                  setAirlinesFilter((prev) =>
+                    prev.filter((i) => i !== airline.uid)
+                  )
+                }
+              }}
+            />
             <label className="select-none" htmlFor={airline.uid}>
               {airline.caption}
             </label>
@@ -112,6 +152,5 @@ const Sort: FC<ISortProps> = ({ handleSort, setFilters }) => {
 export default memo(Sort)
 
 interface ISortProps {
-  handleSort: (value: SortType) => void
   setFilters: (value: React.SetStateAction<IFilters>) => void
 }
