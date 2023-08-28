@@ -25,7 +25,7 @@ function App() {
           ))}
         <button
           disabled={flights.result.flights.length < numberOfFlights}
-          className="btn btn-primary my-4"
+          className="btn btn-ghost my-4 btn-outline rounded-none"
           onClick={showMore}
         >
           Показать ещё

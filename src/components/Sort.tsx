@@ -28,70 +28,98 @@ const Sort: FC<ISortProps> = ({ setFilters, filters }) => {
     <div className="flex flex-col w-[400px] min-h-screen p-2">
       <section className="flex flex-col gap-2 p-4">
         <h1 className="font-medium">Сортировать</h1>
-        <span className="flex gap-1">
+        <span className="flex items-center gap-1">
           <input
             name="sort"
             type="radio"
             id="byAscendingPrice"
+            className="cursor-pointer"
             defaultChecked={filters.sort === 'byAscendingPrice'}
             onChange={() =>
               setFilters((prev) => ({ ...prev, sort: 'byAscendingPrice' }))
             }
           />
-          <label htmlFor="byAscendingPrice">По возростанию цены</label>
+          <label className="cursor-pointer" htmlFor="byAscendingPrice">
+            - По возростанию цены
+          </label>
         </span>
-        <span className="flex gap-1">
+        <span className="flex items-center gap-1">
           <input
             name="sort"
             type="radio"
             id="byDescendingPrice"
+            className="cursor-pointer"
             defaultChecked={filters.sort === 'byDescendingPrice'}
             onChange={() =>
               setFilters((prev) => ({ ...prev, sort: 'byDescendingPrice' }))
             }
           />
-          <label htmlFor="byDescendingPrice">По Убыванию цены</label>
+          <label className="cursor-pointer" htmlFor="byDescendingPrice">
+            - По Убыванию цены
+          </label>
         </span>
-        <span className="flex gap-1">
+        <span className="flex items-center gap-1">
           <input
             value="byTimeInFlight"
             name="sort"
             type="radio"
             id="byTimeInFlight"
+            className="cursor-pointer"
             defaultChecked={filters.sort === 'byTimeInFlight'}
             onChange={() =>
               setFilters((prev) => ({ ...prev, sort: 'byTimeInFlight' }))
             }
           />
-          <label htmlFor="byTimeInFlight">По времени в пути</label>
+          <label className="cursor-pointer" htmlFor="byTimeInFlight">
+            - По времени в пути
+          </label>
         </span>
       </section>
       <section className="flex flex-col gap-2 p-4">
         <h1 className="font-medium">Фильтровать</h1>
-        <span className="flex gap-1">
+        <span className="flex items-center gap-1">
           <input
             type="radio"
             id="1stopover"
             name="filter"
+            className="cursor-pointer"
+            defaultChecked={filters.filter === 'onestopover'}
             onChange={() => {
               setFilters((prev) => ({ ...prev, filter: 'onestopover' }))
             }}
           />
-          <label className="select-none" htmlFor="1stopover">
-            1 пересадка
+          <label className="select-none cursor-pointer" htmlFor="1stopover">
+            - 1 пересадка
           </label>
         </span>
-        <span className="flex gap-1">
+        <span className="flex items-center gap-1">
           <input
             type="radio"
             id="nostopover"
             name="filter"
+            className="cursor-pointer"
+            defaultChecked={filters.filter === 'nostopover'}
             onChange={() => {
               setFilters((prev) => ({ ...prev, filter: 'nostopover' }))
             }}
           />
-          <label className="select-none" htmlFor="nostopover">
-            без пересадок
+          <label className="select-none cursor-pointer" htmlFor="nostopover">
+            - без пересадок
+          </label>
+        </span>
+        <span className="flex items-center gap-1">
+          <input
+            type="radio"
+            id="doesntmatter"
+            name="filter"
+            className="cursor-pointer"
+            defaultChecked={filters.filter === 'doesntmatter'}
+            onChange={() => {
+              setFilters((prev) => ({ ...prev, filter: 'doesntmatter' }))
+            }}
+          />
+          <label className="select-none cursor-pointer" htmlFor="doesntmatter">
+            - не важно
           </label>
         </span>
       </section>
@@ -129,6 +157,7 @@ const Sort: FC<ISortProps> = ({ setFilters, filters }) => {
         {airlines.map((airline, index) => (
           <span key={index} className="flex gap-2 items-center">
             <input
+              className="checkbox"
               type="checkbox"
               id={airline.uid}
               onChange={(e) => {
@@ -142,7 +171,7 @@ const Sort: FC<ISortProps> = ({ setFilters, filters }) => {
                 }
               }}
             />
-            <label className="select-none" htmlFor={airline.uid}>
+            <label className="select-none cursor-pointer" htmlFor={airline.uid}>
               {airline.caption}
             </label>
           </span>

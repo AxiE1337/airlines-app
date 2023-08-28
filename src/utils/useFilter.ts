@@ -5,7 +5,7 @@ export const useFilter = (data: IFlightsInfo) => {
   const [flights, setFlights] = useState<IFlightsInfo>(data)
   const [filters, setFilters] = useState<IFilters>({
     sort: 'byAscendingPrice',
-    filter: '',
+    filter: 'doesntmatter',
     price: {
       from: 0,
       to: 1000000,
@@ -18,14 +18,21 @@ export const useFilter = (data: IFlightsInfo) => {
 
     let filtered = data.result.flights.filter((f) => {
       const oneStopover =
-        filter === 'onestopover' ? f.flight.legs[0].segments.length === 2 : f
+        filter === 'onestopover'
+          ? f.flight.legs[0].segments.length === 2 &&
+            f.flight.legs[1].segments.length === 2
+          : f
       const noStopover =
-        filter === 'nostopover' ? f.flight.legs[0].segments.length === 1 : f
+        filter === 'nostopover'
+          ? f.flight.legs[0].segments.length === 1 &&
+            f.flight.legs[1].segments.length === 1
+          : f
+      const doesntMatter = filter === 'doesntmatter' ? f : f
 
       const priceFrom = Number(f.flight.price.total.amount) > Number(price.from)
       const priceTo = Number(f.flight.price.total.amount) < Number(price.to)
 
-      return oneStopover && noStopover && priceFrom && priceTo
+      return oneStopover && noStopover && doesntMatter && priceFrom && priceTo
     })
     const filteredAirlines = [] as IFlightInfo[]
     if (airlines.length > 0) {
@@ -57,7 +64,9 @@ export const useFilter = (data: IFlightsInfo) => {
         break
       case 'byTimeInFlight':
         sorted = filtered.sort((a, b) => {
-          return a.flight.legs[0].duration - b.flight.legs[0].duration
+          const timeA = a.flight.legs[0].duration + a.flight.legs[1].duration
+          const timeB = b.flight.legs[0].duration + b.flight.legs[1].duration
+          return timeA - timeB
         })
         break
     }
@@ -78,7 +87,7 @@ export type SortType =
   | 'byDescendingPrice'
   | 'byTimeInFlight'
 
-export type FilterType = 'onestopover' | 'nostopover' | ''
+export type FilterType = 'onestopover' | 'nostopover' | 'doesntmatter'
 
 export interface IFilterByPrice {
   from: number
