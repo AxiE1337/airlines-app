@@ -7,14 +7,16 @@ import Sort from './components/Sort'
 
 function App() {
   const [numberOfFlights, setNumberOfFlights] = useState<number>(2)
-  const { flights, setFilters } = useFilter(flightsData as IFlightsInfo)
+  const { flights, setFilters, filters } = useFilter(
+    flightsData as IFlightsInfo
+  )
   const showMore = () => {
     setNumberOfFlights((prev) => prev + 2)
   }
 
   return (
     <main className="flex min-h-screen items-start justify-center">
-      <Sort setFilters={setFilters} />
+      <Sort setFilters={setFilters} filters={filters} />
       <div className="flex flex-col my-4 w-full items-center gap-4">
         {flights.result.flights
           .slice(0, numberOfFlights)

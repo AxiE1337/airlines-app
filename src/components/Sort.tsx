@@ -3,7 +3,7 @@ import { getAirLines } from '../utils/getAirlines'
 import { IFilterByPrice, IFilters } from '../utils/useFilter'
 import { useDebounceState } from 'useful-custom-react-hooks'
 
-const Sort: FC<ISortProps> = ({ setFilters }) => {
+const Sort: FC<ISortProps> = ({ setFilters, filters }) => {
   const [airlines, setAirlines] = useState<
     { uid: string; caption: string; airlineCode: string }[]
   >([])
@@ -33,6 +33,7 @@ const Sort: FC<ISortProps> = ({ setFilters }) => {
             name="sort"
             type="radio"
             id="byAscendingPrice"
+            defaultChecked={filters.sort === 'byAscendingPrice'}
             onChange={() =>
               setFilters((prev) => ({ ...prev, sort: 'byAscendingPrice' }))
             }
@@ -44,6 +45,7 @@ const Sort: FC<ISortProps> = ({ setFilters }) => {
             name="sort"
             type="radio"
             id="byDescendingPrice"
+            defaultChecked={filters.sort === 'byDescendingPrice'}
             onChange={() =>
               setFilters((prev) => ({ ...prev, sort: 'byDescendingPrice' }))
             }
@@ -56,6 +58,7 @@ const Sort: FC<ISortProps> = ({ setFilters }) => {
             name="sort"
             type="radio"
             id="byTimeInFlight"
+            defaultChecked={filters.sort === 'byTimeInFlight'}
             onChange={() =>
               setFilters((prev) => ({ ...prev, sort: 'byTimeInFlight' }))
             }
@@ -122,7 +125,7 @@ const Sort: FC<ISortProps> = ({ setFilters }) => {
         </span>
       </section>
       <section className="flex flex-col gap-2 p-4">
-        <h1 className="font-medium">Авиа компании</h1>
+        <h1 className="font-medium">Авиакомпании</h1>
         {airlines.map((airline, index) => (
           <span key={index} className="flex gap-2 items-center">
             <input
@@ -153,4 +156,5 @@ export default memo(Sort)
 
 interface ISortProps {
   setFilters: (value: React.SetStateAction<IFilters>) => void
+  filters: IFilters
 }

@@ -1,5 +1,6 @@
 import { FC, memo } from 'react'
 import { IFlightInfo } from '../types/types'
+import formatDate from '../utils/formatDate'
 
 const Flight: FC<IFlightProps> = ({ flightInfo }) => {
   const flightTo = flightInfo.flight.legs[0]
@@ -31,11 +32,12 @@ const Flight: FC<IFlightProps> = ({ flightInfo }) => {
         </section>
         <section className="flex flex-col my-4">
           <div className="flex gap-4">
-            <h2>{flightTo.segments[0].departureDate}</h2>
+            {formatDate(flightTo.segments[0].departureDate)}
             <p>-</p>
-            <h2>
-              {flightTo.segments[flightTo.segments.length - 1].arrivalDate}
-            </h2>
+            {formatDate(
+              flightTo.segments[flightTo.segments.length - 1].arrivalDate,
+              false
+            )}
           </div>
           <h2>
             {flightTo.segments.length > 1
@@ -63,11 +65,12 @@ const Flight: FC<IFlightProps> = ({ flightInfo }) => {
         </section>
         <section className="flex flex-col my-4">
           <div className="flex gap-4">
-            <h2>{flightBack.segments[0].departureDate}</h2>
+            {formatDate(flightBack.segments[0].departureDate)}
             <p>-</p>
-            <h2>
-              {flightBack.segments[flightBack.segments.length - 1].arrivalDate}
-            </h2>
+            {formatDate(
+              flightBack.segments[flightBack.segments.length - 1].arrivalDate,
+              false
+            )}
           </div>
           <h2>
             {flightBack.segments.length > 1

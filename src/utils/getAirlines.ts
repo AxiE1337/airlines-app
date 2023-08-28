@@ -14,5 +14,5 @@ export const getAirLines = () => {
       airlines.push(carrier)
     }
   }
-  return airlines
+  return airlines.sort((a, b) => a.uid.localeCompare(b.uid))
 }
