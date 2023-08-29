@@ -6,6 +6,7 @@ import Flight from './components/Flight'
 import Sort from './components/Sort'
 
 function App() {
+  const [open, setOpen] = useState<boolean>(false)
   const [numberOfFlights, setNumberOfFlights] = useState<number>(2)
   const { flights, setFilters, filters } = useFilter(
     flightsData as IFlightsInfo
@@ -15,8 +16,17 @@ function App() {
   }
 
   return (
-    <main className="flex min-h-screen items-start justify-center">
-      <Sort setFilters={setFilters} filters={filters} />
+    <main
+      className={`flex ${
+        open ? 'h-screen overflow-hidden' : 'min-h-screen'
+      } items-start justify-center`}
+    >
+      <Sort
+        setFilters={setFilters}
+        filters={filters}
+        open={open}
+        setOpen={setOpen}
+      />
       <div className="flex flex-col my-4 w-full items-center gap-4">
         {flights.result.flights
           .slice(0, numberOfFlights)

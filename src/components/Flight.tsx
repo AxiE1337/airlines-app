@@ -7,29 +7,31 @@ const Flight: FC<IFlightProps> = ({ flightInfo }) => {
   const flightTo = flightInfo.flight.legs[0]
   const flightBack = flightInfo.flight.legs[1]
   return (
-    <div className="flex flex-col items-center justify-center w-4/5">
+    <div className="flex flex-col items-center justify-center w-4/5 md:w-full md:p-1">
       <section className="flex justify-between items-center bg-blue-600 text-white px-2 w-full">
-        <h1 className="font-semibold text-xl select-none">
+        <h1 className="font-semibold text-xl md:text-lg select-none">
           {flightInfo.flight?.carrier.caption}
         </h1>
         <div className="flex flex-col items-end">
-          <h1 className="text-2xl">
+          <h1 className="text-2xl md:text-md">
             {
               flightInfo.flight.price.passengerPrices[0].singlePassengerTotal
                 .amount
             }{' '}
             Р
           </h1>
-          <h2>Стоимость для одного взрослого пассажира</h2>
+          <h2 className="md:text-sm text-right">
+            Стоимость для одного взрослого пассажира
+          </h2>
         </div>
       </section>
       {/* flight to */}
       <div className="flex flex-col content-start w-full px-6">
         <section className="flex gap-2 my-3">
-          <h1 className="font-semibold">{`${flightTo.segments[0]?.departureCity.caption}, ${flightTo.segments[0]?.departureAirport.caption}`}</h1>
-          <h1 className="text-blue-400">{`(${flightTo.segments[0]?.departureAirport.uid})`}</h1>
+          <h1 className="font-semibold md:text-sm">{`${flightTo.segments[0]?.departureCity.caption}, ${flightTo.segments[0]?.departureAirport.caption}`}</h1>
+          <h1 className="text-blue-400 md:text-sm">{`(${flightTo.segments[0]?.departureAirport.uid})`}</h1>
           <p className="text-blue-400">→</p>
-          <h1 className="font-semibold">{`${
+          <h1 className="font-semibold md:text-sm">{`${
             flightTo.segments[flightTo.segments.length - 1]?.arrivalCity
               ?.caption
           }, ${
@@ -43,7 +45,7 @@ const Flight: FC<IFlightProps> = ({ flightInfo }) => {
         <section className="flex flex-col items-center my-4 w-full">
           <div className="flex gap-4 w-full items-center justify-between">
             {formatDate(flightTo.segments[0].departureDate)}
-            <h2 className="text-xl">
+            <h2 className="text-xl md:text-sm">
               {convertMinutesToHours(flightTo.duration)}
             </h2>
             {formatDate(
@@ -68,17 +70,17 @@ const Flight: FC<IFlightProps> = ({ flightInfo }) => {
       {/* flight back */}
       <div className="flex flex-col content-start w-full px-6">
         <section className="flex gap-2 my-3">
-          <h1 className="font-semibold">{`${flightBack.segments[0]?.departureCity?.caption}, ${flightBack.segments[0]?.departureAirport?.caption}`}</h1>
-          <h1 className="text-blue-400">{`(${flightBack.segments[0]?.departureAirport.uid})`}</h1>
+          <h1 className="font-semibold md:text-sm">{`${flightBack.segments[0]?.departureCity?.caption}, ${flightBack.segments[0]?.departureAirport?.caption}`}</h1>
+          <h1 className="text-blue-400 md:text-sm">{`(${flightBack.segments[0]?.departureAirport.uid})`}</h1>
           <p className="text-blue-400">→</p>
-          <h1 className="font-semibold">{`${
+          <h1 className="font-semibold md:text-sm">{`${
             flightBack.segments[flightBack.segments.length - 1]?.arrivalCity
               ?.caption
           }, ${
             flightBack.segments[flightBack.segments.length - 1]?.arrivalAirport
               ?.caption
           }`}</h1>
-          <h1 className="text-blue-400">{`(${
+          <h1 className="text-blue-400 md:text-sm">{`(${
             flightBack.segments[flightBack.segments.length - 1]?.arrivalAirport
               .uid
           })`}</h1>
@@ -86,7 +88,7 @@ const Flight: FC<IFlightProps> = ({ flightInfo }) => {
         <section className="flex flex-col items-center my-4 w-full">
           <div className="flex gap-4 w-full items-center justify-between">
             {formatDate(flightBack.segments[0].departureDate)}
-            <h2 className="text-xl">
+            <h2 className="text-xl md:text-sm">
               {convertMinutesToHours(flightBack.duration)}
             </h2>
             {formatDate(
@@ -107,7 +109,10 @@ const Flight: FC<IFlightProps> = ({ flightInfo }) => {
           Рейс выполняет: {flightBack.segments[0]?.airline?.caption}
         </h2>
       </div>
-      <button className="btn btn-warning text-white bg-yellow-600 hover:bg-yellow-500 my-1 w-full">
+      <button
+        onClick={() => console.log(flightInfo)}
+        className="btn btn-warning text-white bg-yellow-600 hover:bg-yellow-500 my-1 w-full"
+      >
         Выбрать
       </button>
     </div>

@@ -28,7 +28,7 @@ const formatDate = (
   return (
     <div className="flex gap-2 items-end justify-center">
       {timeLeft && (
-        <h1 className="font-semibold text-xl">
+        <h1 className="font-semibold text-xl md:text-sm">
           {hours.toString().padStart(2, '0')}:
           {minutes.toString().padStart(2, '0')}
         </h1>
@@ -37,7 +37,7 @@ const formatDate = (
         {day} {months[month]} {daysOfWeek[dayOfWeek]}
       </h3>
       {!timeLeft && (
-        <h1 className="font-semibold text-xl">
+        <h1 className="font-semibold text-xl md:text-sm">
           {hours.toString().padStart(2, '0')}:
           {minutes.toString().padStart(2, '0')}
         </h1>
