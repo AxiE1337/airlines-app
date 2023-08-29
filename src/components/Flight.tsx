@@ -8,15 +8,20 @@ const Flight: FC<IFlightProps> = ({ flightInfo }) => {
   const flightBack = flightInfo.flight.legs[1]
   return (
     <div className="flex flex-col items-center justify-center w-4/5">
-      <section className="flex flex-col items-end bg-blue-600 text-white px-2 w-full">
-        <h1 className="text-2xl">
-          {
-            flightInfo.flight.price.passengerPrices[0].singlePassengerTotal
-              .amount
-          }{' '}
-          Р
+      <section className="flex justify-between items-center bg-blue-600 text-white px-2 w-full">
+        <h1 className="font-semibold text-xl select-none">
+          {flightInfo.flight?.carrier.caption}
         </h1>
-        <h2>Стоимость для одного взрослого пассажира</h2>
+        <div className="flex flex-col items-end">
+          <h1 className="text-2xl">
+            {
+              flightInfo.flight.price.passengerPrices[0].singlePassengerTotal
+                .amount
+            }{' '}
+            Р
+          </h1>
+          <h2>Стоимость для одного взрослого пассажира</h2>
+        </div>
       </section>
       {/* flight to */}
       <div className="flex flex-col content-start w-full px-6">

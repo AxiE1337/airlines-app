@@ -1,12 +1,10 @@
 import { FC, memo, useEffect, useMemo, useState } from 'react'
-import { getAirLines } from '../utils/getAirlines'
+import { IAirlinesSort, getAirLines } from '../utils/getAirlines'
 import { IFilterByPrice, IFilters } from '../utils/useFilter'
 import { useDebounceState } from 'useful-custom-react-hooks'
 
 const Sort: FC<ISortProps> = ({ setFilters, filters }) => {
-  const [airlines, setAirlines] = useState<
-    { uid: string; caption: string; airlineCode: string }[]
-  >([])
+  const [airlines, setAirlines] = useState<IAirlinesSort[]>([])
   const [airlinesFilter, setAirlinesFilter] = useState<string[]>([])
   const [price, setPrice] = useDebounceState<IFilterByPrice>(
     {
@@ -21,8 +19,8 @@ const Sort: FC<ISortProps> = ({ setFilters, filters }) => {
   }, [price, airlinesFilter])
 
   useMemo(() => {
-    setAirlines(getAirLines())
-  }, [])
+    setAirlines(getAirLines(filters.filter))
+  }, [filters.filter])
 
   return (
     <div className="flex flex-col w-[400px] min-h-screen p-2">
@@ -160,6 +158,7 @@ const Sort: FC<ISortProps> = ({ setFilters, filters }) => {
               className="checkbox"
               type="checkbox"
               id={airline.uid}
+              disabled={airline.disabled}
               onChange={(e) => {
                 const { checked } = e.target
                 if (checked) {
@@ -171,7 +170,14 @@ const Sort: FC<ISortProps> = ({ setFilters, filters }) => {
                 }
               }}
             />
-            <label className="select-none cursor-pointer" htmlFor={airline.uid}>
+            <label
+              className={`select-none ${
+                airline.disabled
+                  ? 'cursor-not-allowed opacity-70'
+                  : 'cursor-pointer'
+              }`}
+              htmlFor={airline.uid}
+            >
               {airline.caption}
             </label>
           </span>
