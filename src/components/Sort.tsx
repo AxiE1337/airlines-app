@@ -32,7 +32,9 @@ const Sort: FC<ISortProps> = ({ setFilters, filters, open, setOpen }) => {
       <SwapBtn onClick={handleOpen} />
       <div
         className={`flex flex-col w-[400px] min-h-screen bg-white z-20 p-2 transition-all md:pt-10 md:fixed md:top-0 md:left-0 ${
-          !open ? 'md:-translate-x-full' : 'md:translate-x-0 md:w-full'
+          !open
+            ? 'md:-translate-x-full'
+            : 'md:translate-x-0 md:w-full h-full overflow-y-scroll'
         }`}
         data-drawer-prevent-scroll="main"
       >
